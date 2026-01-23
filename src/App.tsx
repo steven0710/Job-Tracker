@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import type { Job, JobStatus } from "./types/jobs"; // your type file
+import { JOB_STATUSES, type Job, type JobStatus } from "./types/jobs"; // your type file
 // your type file
 
 const JobForm = () => {
@@ -25,11 +25,23 @@ const JobForm = () => {
       company,
       role,
       status,
+      dateApplied: "",
     };
     setJobs([...jobs, newJob]);
     setCompany("");
     setRole("");
     setStatus("Applied");
+  };
+
+  // update status for a job at a given index
+  const updateJobStatus = (index: number, newStatus: JobStatus) => {
+    setJobs((prev) => {
+      const updated = prev.map((job, i) =>
+        i === index ? { ...job, status: newStatus } : job,
+      );
+      localStorage.setItem("jobs", JSON.stringify(updated));
+      return updated;
+    });
   };
 
   return (
@@ -65,9 +77,11 @@ const JobForm = () => {
               value={status}
               onChange={(e) => setStatus(e.target.value as JobStatus)}
             >
-              <option value="Applied">Applied</option>
-              <option value="Interview">Interview</option>
-              <option value="Rejected">Rejected</option>
+              {JOB_STATUSES.map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ))}
             </select>
           </div>
         </div>
@@ -77,9 +91,18 @@ const JobForm = () => {
 
       <h2>Saved Jobs</h2>
       <ul>
-        {jobs.map((job) => (
-          <li key={job.company}>
-            {job.company} - {job.role} ({job.status})
+        {jobs.map((job, i) => (
+          <li key={i}>
+            {job.company} - {job.role} (
+            <select
+              value={job.status}
+              onChange={(e) => updateJobStatus(i, e.target.value as JobStatus)}
+            >
+              <option value="Applied">Applied</option>
+              <option value="Interview">Interview</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+            )
           </li>
         ))}
       </ul>
