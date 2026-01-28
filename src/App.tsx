@@ -28,8 +28,6 @@ const JobForm = () => {
       dateApplied: "",
     };
     setJobs([...jobs, newJob]);
-    setCompany("");
-    setRole("");
     setStatus("Applied");
   };
 
@@ -48,7 +46,7 @@ const JobForm = () => {
     <div>
       <h2>Add a Job</h2>
       <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-3">
+        <div className="grid grid-cols-3 gap-4">
           <div className="flex flex-row p-2">
             <label className="">Company:</label>
             <input
@@ -92,18 +90,25 @@ const JobForm = () => {
       <h2>Saved Jobs</h2>
       <ul>
         {jobs.map((job, i) => (
-          <li key={i}>
-            {job.company} - {job.role} (
-            <select
-              value={job.status}
-              onChange={(e) => updateJobStatus(i, e.target.value as JobStatus)}
-            >
-              <option value="Applied">Applied</option>
-              <option value="Interview">Interview</option>
-              <option value="Rejected">Rejected</option>
-            </select>
-            )
-          </li>
+          <>
+            <li key={i}>
+              {job.company} - {job.role} (
+              <select
+                value={job.status}
+                onChange={(e) =>
+                  updateJobStatus(i, e.target.value as JobStatus)
+                }
+              >
+                <option value="Applied">Applied</option>
+                <option value="Interview">Interview</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+              )
+              <button onClick={() => setJobs(jobs.filter((_, j) => j !== i))}>
+                delete here
+              </button>
+            </li>
+          </>
         ))}
       </ul>
     </div>
