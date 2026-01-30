@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { JOB_STATUSES, type Job, type JobStatus } from "./types/jobs"; // your type file
+import SavedJobs from "./SavedJobs";
 // your type file
 
 const JobForm = () => {
@@ -8,10 +9,26 @@ const JobForm = () => {
   const [role, setRole] = useState("");
   const [status, setStatus] = useState<JobStatus>("Applied");
 
+  const [quote, setQuote] = useState<{ q: string; a: string } | null>(null);
+
+  const api_url = "https://dummyjson.com/quotes/random";
+
+  const getapi = async (url: string) => {
+    const res = await fetch(url);
+    const data = await res.json();
+    console.log(data.quote, data.author);
+    setQuote({ q: data.quote, a: data.author });
+  };
   // Load saved jobs from localStorage on mount
   useEffect(() => {
     const saved = localStorage.getItem("jobs");
     if (saved) setJobs(JSON.parse(saved));
+    void getapi(api_url);
+    // set interval to fetch every 5s
+    const id = window.setInterval(() => {
+      void getapi(api_url);
+    }, 5000);
+    return () => clearInterval(id);
   }, []);
 
   // Save jobs to localStorage whenever they change
@@ -43,14 +60,22 @@ const JobForm = () => {
   };
 
   return (
-    <div>
-      <h2>Add a Job</h2>
+    <div className="flex flex-col">
+      <div className="">hi</div>
+      {quote && (
+        <div
+          className="flex text-center bg-blue-500 italic p-4 border"
+          // style={{ backgroundColor: "blue" }}
+        >
+          “{quote.q}” — <strong>{quote.a}</strong>
+        </div>
+      )}
+      <h2 className="py-4">Add a Job</h2>
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-3 gap-4">
           <div className="flex flex-row p-2">
             <label className="">Company:</label>
             <input
-              className=""
               type="text"
               value={company}
               onChange={(e) => setCompany(e.target.value)}
@@ -86,31 +111,8 @@ const JobForm = () => {
 
         <button type="submit">Add Job</button>
       </form>
-
       <h2>Saved Jobs</h2>
-      <ul>
-        {jobs.map((job, i) => (
-          <>
-            <li key={i}>
-              {job.company} - {job.role} (
-              <select
-                value={job.status}
-                onChange={(e) =>
-                  updateJobStatus(i, e.target.value as JobStatus)
-                }
-              >
-                <option value="Applied">Applied</option>
-                <option value="Interview">Interview</option>
-                <option value="Rejected">Rejected</option>
-              </select>
-              )
-              <button onClick={() => setJobs(jobs.filter((_, j) => j !== i))}>
-                delete here
-              </button>
-            </li>
-          </>
-        ))}
-      </ul>
+      <SavedJobs jobs={jobs} setJobs={setJobs} />
     </div>
   );
 };
