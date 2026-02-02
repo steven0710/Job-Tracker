@@ -27,7 +27,7 @@ const JobForm = () => {
     // set interval to fetch every 5s
     const id = window.setInterval(() => {
       void getapi(api_url);
-    }, 5000);
+    }, 10000);
     return () => clearInterval(id);
   }, []);
 
