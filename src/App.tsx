@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { JOB_STATUSES, type Job, type JobStatus } from "./types/jobs"; // your type file
 import SavedJobs from "./SavedJobs";
 import { getJobs } from "./services/jobServices";
-import { getRandomQuote } from "./services/quoteServices";
+import QuoteDisplay from "./quoteDisplay";
 // your type file
 
 const JobForm = () => {
@@ -11,34 +11,10 @@ const JobForm = () => {
   const [role, setRole] = useState("");
   const [status, setStatus] = useState<JobStatus>("Applied");
 
-  const [quote, setQuote] = useState<{ q: string; a: string } | null>(null);
-
-  const timeoutRef = useRef<number | null>(null);
   // Load saved jobs from localStorage on mount
 
   useEffect(() => {
     getJobs().then(setJobs);
-
-    let isMounted = true;
-
-    const fetchQuote = async () => {
-      try {
-        const q = await getRandomQuote();
-        if (!isMounted) return;
-        setQuote(q);
-        timeoutRef.current = window.setTimeout(fetchQuote, 10000);
-      } catch (err) {
-        console.error(err);
-      }
-      // schedule next fetch 10s after previous fetch completes
-    };
-
-    fetchQuote(); // first fetch
-
-    return () => {
-      isMounted = false;
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
   }, []);
 
   const handleSubmit = (e: { preventDefault: () => void }) => {
@@ -66,11 +42,7 @@ const JobForm = () => {
 
   return (
     <div className="flex flex-col relative">
-      {quote && (
-        <div className="absolute top-0 left-0 w-full h-20">
-          {quote.q}" — {<strong>{quote.a}</strong>}
-        </div>
-      )}
+      <QuoteDisplay />
 
       <h2 className="py-16">Add a Job</h2>
       <form onSubmit={handleSubmit}>
