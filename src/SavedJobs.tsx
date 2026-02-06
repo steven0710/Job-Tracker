@@ -84,7 +84,12 @@ const SavedJobs: React.FC<Props> = ({ jobs, setJobs }) => {
               </div>
             ) : (
               <div>
-                {job.company} - {job.role} (<span>{job.status}</span>)
+                {job.company} - {job.role} (<span>{job.status}</span>){" "}
+                {new Date(job.dateApplied).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
               </div>
             )}
           </div>

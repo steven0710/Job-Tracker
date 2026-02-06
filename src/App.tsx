@@ -42,7 +42,7 @@ const JobForm = () => {
       company,
       role,
       status,
-      dateApplied: "",
+      dateApplied: new Date().toISOString(),
     };
     setJobs([...jobs, newJob]);
     setStatus("Applied");
