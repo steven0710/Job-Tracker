@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { JOB_STATUSES, type Job, type JobStatus } from "./types/jobs"; // your type file
 import SavedJobs from "./SavedJobs";
+import { getJobs } from "./services/jobServices";
+import { getRandomQuote } from "./services/quoteServices";
 // your type file
 
 const JobForm = () => {
@@ -11,24 +13,32 @@ const JobForm = () => {
 
   const [quote, setQuote] = useState<{ q: string; a: string } | null>(null);
 
-  const api_url = "https://dummyjson.com/quotes/random";
-
-  const getapi = async (url: string) => {
-    const res = await fetch(url);
-    const data = await res.json();
-    console.log(data.quote, data.author);
-    setQuote({ q: data.quote, a: data.author });
-  };
+  const timeoutRef = useRef<number | null>(null);
   // Load saved jobs from localStorage on mount
+
   useEffect(() => {
-    const saved = localStorage.getItem("jobs");
-    if (saved) setJobs(JSON.parse(saved));
-    void getapi(api_url);
-    // set interval to fetch every 5s
-    const id = window.setInterval(() => {
-      void getapi(api_url);
-    }, 10000);
-    return () => clearInterval(id);
+    getJobs().then(setJobs);
+
+    let isMounted = true;
+
+    const fetchQuote = async () => {
+      try {
+        const q = await getRandomQuote();
+        if (!isMounted) return;
+        setQuote(q);
+        timeoutRef.current = window.setTimeout(fetchQuote, 10000);
+      } catch (err) {
+        console.error(err);
+      }
+      // schedule next fetch 10s after previous fetch completes
+    };
+
+    fetchQuote(); // first fetch
+
+    return () => {
+      isMounted = false;
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
   }, []);
 
   // Save jobs to localStorage whenever they change
@@ -36,7 +46,7 @@ const JobForm = () => {
     localStorage.setItem("jobs", JSON.stringify(jobs));
   }, [jobs]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault();
     const newJob: Job = {
       company,
@@ -60,16 +70,14 @@ const JobForm = () => {
   // };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col relative">
       {quote && (
-        <div
-          className="pb-16"
-          // style={{ backgroundColor: "blue" }}
-        >
-          “{quote.q}” — <strong>{quote.a}</strong>
+        <div className="absolute top-0 left-0 w-full h-20">
+          {quote.q}" — {<strong>{quote.a}</strong>}
         </div>
       )}
-      <h2 className="py-4">Add a Job</h2>
+
+      <h2 className="py-16">Add a Job</h2>
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-3 gap-4">
           <div className="flex flex-row p-2">
