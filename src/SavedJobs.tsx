@@ -104,9 +104,8 @@ const SavedJobs: React.FC<Props> = ({ jobs, setJobs }) => {
                 </>
               ) : (
                 <>
-                  <button onClick={() => startEdit(i)}>Edit</button>
-
                   <button onClick={() => deleteJob(i)}>Delete</button>
+                  <button onClick={() => startEdit(i)}>Edit</button>
                 </>
               )}
             </div>

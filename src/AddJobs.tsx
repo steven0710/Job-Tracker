@@ -1,20 +1,15 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { JOB_STATUSES, type Job, type JobStatus } from "./types/jobs";
-import { getJobs } from "./services/jobServices";
+import { addJob } from "./services/jobServices";
 type Props = {
-  jobs: Job[];
   setJobs: React.Dispatch<React.SetStateAction<Job[]>>;
 };
-const JobForm: React.FC<Props> = ({ jobs, setJobs }) => {
+const JobForm: React.FC<Props> = ({ setJobs }) => {
   const [company, setCompany] = useState<string>("");
   const [role, setRole] = useState<string>("");
   const [status, setStatus] = useState<JobStatus>("Applied");
 
-  useEffect(() => {
-    getJobs().then(setJobs);
-  }, []);
-
-  const handleSubmit = (e: { preventDefault: () => void }) => {
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     const newJob: Job = {
       company,
@@ -22,7 +17,10 @@ const JobForm: React.FC<Props> = ({ jobs, setJobs }) => {
       status,
       dateApplied: new Date().toISOString(),
     };
-    setJobs([...jobs, newJob]);
+    const updated = await addJob(newJob);
+    setJobs(updated);
+    setCompany("");
+    setRole("");
     setStatus("Applied");
   };
 

@@ -18,8 +18,7 @@ const JobForm = () => {
   return (
     <div className="flex flex-col relative">
       <QuoteDisplay />
-
-      <AddJobs jobs={jobs} setJobs={setJobs} />
+      <AddJobs setJobs={setJobs} />
       <SavedJobs jobs={jobs} setJobs={setJobs} />
     </div>
   );
