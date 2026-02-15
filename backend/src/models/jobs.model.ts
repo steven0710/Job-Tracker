@@ -4,7 +4,8 @@ export interface JobDocument extends mongoose.Document {
   title: string;
   company: string;
   employmentType?: "full-time" | "part-time" | "contract" | "internship";
-  status: "open" | "closed";
+  status: "applied" | "interviewing" | "offer" | "rejected";
+  userId: mongoose.Types.ObjectId;
 }
 
 const jobSchema = new Schema<JobDocument>(
@@ -15,7 +16,16 @@ const jobSchema = new Schema<JobDocument>(
       type: String,
       enum: ["full-time", "part-time", "contract", "internship"],
     },
-    status: { type: String, enum: ["open", "closed"], default: "open" },
+    status: {
+      type: String,
+      enum: ["applied", "interviewing", "offer", "rejected"],
+      default: "applied",
+    },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true, // always tie a job to a user
+    },
   },
   { timestamps: true },
 );
