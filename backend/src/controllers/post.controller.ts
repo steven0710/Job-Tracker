@@ -1,6 +1,7 @@
 import { Response } from "express";
 import { Job } from "../models/jobs.model";
 import { AuthRequest } from "../types/auth-request";
+import { updateJobSchema } from "../validators/job.validator";
 
 export const createJob = async (req: AuthRequest, res: Response) => {
   try {
@@ -63,22 +64,40 @@ export const getJobById = async (req: AuthRequest, res: Response) => {
   }
 };
 
-// export const updateJob = async (req: AuthRequest, res: Response) => {
-//   try {
-//     if (!req.user?.userId) {
-//       return res.status(401).json({ message: "Not authorized" });
-//     }
-//     const allowedFields = [
-//       "title",
-//       "company",
-//       "employmentType",
-//       "status",
-//     ] as const;
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ message: "Server error" });
-//   }
-// };
+export const updateJob = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.user?.userId) {
+      return res.status(401).json({ message: "Not authorized" });
+    }
+    const parsed = updateJobSchema.safeParse(req.body);
+
+    if (!parsed.success) {
+      return res.status(400).json({
+        message: "Validation failed",
+        issues: parsed.error.issues, // includes unrecognized_keys
+        formErrors: parsed.error.flatten().formErrors,
+        fieldErrors: parsed.error.flatten().fieldErrors,
+      });
+    }
+    console.log("params:", req.params);
+    console.log("userId:", req.user?.userId);
+    console.log("body:", req.body);
+    const updatedJob = await Job.findOneAndUpdate(
+      { _id: req.params.id, userId: req.user.userId },
+      parsed.data,
+      { returnDocument: "after", runValidators: true },
+    );
+
+    if (!updatedJob) {
+      return res.status(404).json({ message: "Job not found" });
+    }
+
+    return res.status(200).json({ message: "Job updated", job: updatedJob });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 export const deleteJob = async (req: AuthRequest, res: Response) => {
   try {
