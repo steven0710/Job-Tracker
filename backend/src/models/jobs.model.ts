@@ -1,10 +1,16 @@
 import mongoose, { Schema } from "mongoose";
+import {
+  EMPLOYMENT_TYPES,
+  EmploymentType,
+  JOB_STATUSES,
+  JobStatus,
+} from "../constants/job.constants";
 
 export interface JobDocument extends mongoose.Document {
   title: string;
   company: string;
-  employmentType?: "full-time" | "part-time" | "contract" | "internship";
-  status: "applied" | "interviewing" | "offer" | "rejected";
+  employmentType?: EmploymentType;
+  status: JobStatus;
   userId: mongoose.Types.ObjectId;
 }
 
@@ -14,11 +20,11 @@ const jobSchema = new Schema<JobDocument>(
     company: { type: String, required: true, trim: true, maxLength: 100 },
     employmentType: {
       type: String,
-      enum: ["full-time", "part-time", "contract", "internship"],
+      enum: EMPLOYMENT_TYPES,
     },
     status: {
       type: String,
-      enum: ["applied", "interviewing", "offer", "rejected"],
+      enum: JOB_STATUSES,
       default: "applied",
     },
     userId: {

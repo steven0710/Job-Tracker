@@ -1,7 +1,7 @@
 import { Response } from "express";
 import { Job } from "../models/jobs.model";
 import { AuthRequest } from "../types/auth-request";
-import { updateJobSchema } from "../validators/job.validator";
+import { createJobSchema, updateJobSchema } from "../validators/job.validator";
 
 export const createJob = async (req: AuthRequest, res: Response) => {
   try {
@@ -11,7 +11,17 @@ export const createJob = async (req: AuthRequest, res: Response) => {
       return res.status(401).json({ message: "Not authorized" });
     }
 
-    // Take userId directly from the verified JWT
+    const parsed = createJobSchema.safeParse(req.body);
+
+    if (!parsed.success) {
+      return res.status(400).json({
+        message: "Validation failed",
+        issues: parsed.error.issues,
+        formErrors: parsed.error.flatten().formErrors,
+        fieldErrors: parsed.error.flatten().fieldErrors,
+      });
+    }
+
     const userId = req.user.userId;
 
     // Create job with userId attached
