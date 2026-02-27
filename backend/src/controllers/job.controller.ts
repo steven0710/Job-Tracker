@@ -5,8 +5,6 @@ import { createJobSchema, updateJobSchema } from "../validators/job.validator";
 
 export const createJob = async (req: AuthRequest, res: Response) => {
   try {
-    const { title, company, employmentType, status } = req.body;
-
     if (!req.user?.userId) {
       return res.status(401).json({ message: "Not authorized" });
     }
@@ -22,15 +20,10 @@ export const createJob = async (req: AuthRequest, res: Response) => {
       });
     }
 
-    const userId = req.user.userId;
-
     // Create job with userId attached
     const job = await Job.create({
-      title,
-      company,
-      employmentType,
-      status,
-      userId,
+      ...parsed.data,
+      userId: req.user.userId,
     });
 
     res.status(201).json(job);
@@ -92,7 +85,7 @@ export const updateJob = async (req: AuthRequest, res: Response) => {
 
     const updatedJob = await Job.findOneAndUpdate(
       { _id: req.params.id, userId: req.user.userId },
-      parsed.data,
+      { $set: parsed.data },
       { returnDocument: "after", runValidators: true },
     );
 

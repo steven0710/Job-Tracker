@@ -5,7 +5,7 @@ import {
   getAllJobs,
   getJobById,
   updateJob,
-} from "../controllers/post.controller";
+} from "../controllers/job.controller";
 import { authMiddleware } from "../middleware";
 
 const jobRouter = Router();

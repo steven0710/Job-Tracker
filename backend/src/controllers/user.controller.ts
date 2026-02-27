@@ -1,22 +1,26 @@
 import { User } from "../models/user.model";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import {
+  loginUserSchema,
+  registerUserSchema,
+} from "../validators/user.validator";
 const registerUser = async (req: Request, res: Response) => {
   try {
-    const { username, password, email } = req.body;
-    if (!username || !email || !password) {
-      return res.status(400).json({ message: "All fields are required" });
+    const parsed = registerUserSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res
+        .status(400)
+        .json({ message: "Validation failed", issues: parsed.error.issues });
     }
-
-    const existingUser = await User.findOne({ email: email.toLowerCase() });
+    const email = parsed.data.email.toLowerCase();
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
-
     const user = await User.create({
-      username,
-      password,
-      email: email.toLowerCase(),
+      ...parsed.data,
+      email,
     });
 
     res.status(201).json({
@@ -33,25 +37,31 @@ const registerUser = async (req: Request, res: Response) => {
 
 const loginUser = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
-    if (!email || !password) {
-      return res.status(400).json({ message: "All fields are required" });
+    const parsed = loginUserSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res
+        .status(400)
+        .json({ message: "Validation failed", issues: parsed.error.issues });
     }
-    const user = await User.findOne({ email: email.toLowerCase() });
+
+    const JWT_SECRET = process.env.JWT_SECRET as string;
+    if (!JWT_SECRET) {
+      return res.status(500).json({ message: "Server misconfigured" });
+    }
+    const email = parsed.data.email.toLowerCase();
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
-    const isPasswordValid = await user.comparePasswords(password);
+    const isPasswordValid = await user.comparePasswords(parsed.data.password);
 
     if (!isPasswordValid) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    const token = jwt.sign(
-      { userId: user._id },
-      process.env.JWT_SECRET as string,
-      { expiresIn: "1d" },
-    );
+    const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
+      expiresIn: "1d",
+    });
     res.status(200).json({
       message: "Login successful",
       username: user.username,
@@ -62,21 +72,5 @@ const loginUser = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-const logoutUser = async (req: Request, res: Response) => {
-  try {
-    // Implement logout logic (e.g., invalidate token)
-    const { email, token } = req.body;
-    if (!email) {
-      return res.status(400).json({ message: "Email is required" });
-    }
 
-    if (!token) {
-      return res.status(400).json({ message: "Invalid Token" });
-    }
-    res.status(200).json({ message: "Logout successful" });
-  } catch (error) {
-    console.error(`Error: ${error}`);
-    res.status(500).json({ message: "Server error" });
-  }
-};
-export { registerUser, loginUser, logoutUser };
+export { registerUser, loginUser };
