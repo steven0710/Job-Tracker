@@ -38,7 +38,7 @@ const QuoteDisplay = () => {
   }, []);
 
   return (
-    <div className="absolute top-0 left-0 w-full h-20">
+    <div className="top-0 left-0 w-full h-20">
       {quote ? (
         <>
           "{quote.q}" — <strong>{quote.a}</strong>
