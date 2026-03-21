@@ -4,7 +4,6 @@ import SavedJobs from "./SavedJobs";
 import { getJobsByApi } from "./services/jobServices";
 import QuoteDisplay from "./quoteDisplay";
 import AddJobs from "./AddJobs";
-import { login } from "./services/userServices";
 // your type file
 
 const JobForm = () => {
@@ -26,34 +25,8 @@ const JobForm = () => {
     loadJobs();
   }, [setJobs]);
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const data = await login({ email, password });
-    localStorage.setItem("token", data.token);
-  };
-
   return (
     <div className="flex flex-col gap-4 p-4">
-      <form onSubmit={handleLogin} className="mb-4">
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="email"
-          required
-        />
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="password"
-          required
-        />
-        <button type="submit">Login</button>
-      </form>
       <QuoteDisplay />
       <AddJobs setJobs={setJobs} />
       <SavedJobs jobs={jobs} setJobs={setJobs} />

@@ -19,7 +19,9 @@ export type LoginResponse = {
   };
 };
 
-export async function login(payload: LoginPayload): Promise<LoginResponse> {
+export async function handleLogin(
+  payload: LoginPayload,
+): Promise<LoginResponse> {
   const res = await fetch(`${BACKEND_API}/users/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
