@@ -28,4 +28,5 @@ const loginRoute = createRoute({
 const routeTree = rootRoute.addChildren([indexRoute, loginRoute]);
 export const router = createRouter({
   routeTree,
+  basepath: "/Job-Tracker",
 });

@@ -4,6 +4,8 @@ import SavedJobs from "./SavedJobs";
 import { getJobsByApi } from "./services/jobServices";
 import QuoteDisplay from "./quoteDisplay";
 import AddJobs from "./AddJobs";
+import { useNavigate } from "@tanstack/react-router";
+import { TOKEN_KEY } from "./constants";
 // your type file
 
 const JobForm = () => {
@@ -25,9 +27,16 @@ const JobForm = () => {
     loadJobs();
   }, [setJobs]);
 
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem(TOKEN_KEY);
+    navigate({ to: "/login", replace: true }); // redirect to login page
+  };
   return (
     <div className="flex flex-col gap-4 p-4">
       <QuoteDisplay />
+      <button onClick={handleLogout}>Logout</button>
       <AddJobs setJobs={setJobs} />
       <SavedJobs jobs={jobs} setJobs={setJobs} />
     </div>
