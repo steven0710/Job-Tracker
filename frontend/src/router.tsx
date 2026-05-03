@@ -16,13 +16,13 @@ const rootRoute = createRootRoute({
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/",
-  component: () => <App />,
+  component: () => <Login />,
 });
 
 const loginRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "login",
-  component: () => <Login />,
+  component: () => <App />,
 });
 
 const routeTree = rootRoute.addChildren([indexRoute, loginRoute]);
