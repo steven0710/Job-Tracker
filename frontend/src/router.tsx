@@ -21,7 +21,7 @@ const indexRoute = createRoute({
 
 const loginRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/login",
+  path: "login",
   component: () => <Login />,
 });
 
