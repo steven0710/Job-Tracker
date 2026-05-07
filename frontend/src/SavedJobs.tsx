@@ -7,6 +7,18 @@ import {
   type JobType,
 } from "./types/jobs";
 import { deleteJobReal, updateJob } from "./services/jobServices";
+import {
+  SecondarySection,
+  SectionHeader,
+  SectionTitle,
+  SectionSubtitle,
+  FormField,
+  FormLabel,
+  FormInput,
+  FormSelect,
+  PrimaryButton,
+  SecondaryButton,
+} from "./components/StyledElements";
 
 type Props = {
   jobs: Job[];
@@ -34,21 +46,20 @@ const SavedJobs: React.FC<Props> = ({ jobs, setJobs }) => {
       company: editCompany,
       title: editRole,
       status: editStatus,
-      employmentType: employmentType,
+      employmentType,
     };
     try {
       await updateJob(_id, payload);
-      setJobs((prev) => {
-        const updated = prev.map((job, idx) =>
+      setJobs((prev) =>
+        prev.map((job, idx) =>
           idx === i
             ? {
                 ...job,
                 ...payload,
               }
             : job,
-        );
-        return updated;
-      });
+        ),
+      );
     } catch (err) {
       console.error("Failed to update job:", err);
     }
@@ -58,97 +69,127 @@ const SavedJobs: React.FC<Props> = ({ jobs, setJobs }) => {
   const cancelEdit = () => setEditingIndex(null);
 
   const deleteJob = async (_id: string, i: number) => {
-    await deleteJobReal(jobs[i]._id);
-    setJobs((prev) => {
-      const updated = prev.filter((_, idx) => idx !== i);
-      return updated;
-    });
+    await deleteJobReal(_id);
+    setJobs((prev) => prev.filter((_, idx) => idx !== i));
   };
 
-  // const updateJobStatus = (index: number, newStatus: JobStatus) => {
-  //   setJobs((prev) => {
-  //     const updated = prev.map((job, i) =>
-  //       i === index ? { ...job, status: newStatus } : job,
-  //     );
-  //     localStorage.setItem("jobs", JSON.stringify(updated));
-  //     return updated;
-  //   });
-  // };
-
   return (
-    <>
-      <h2>Saved Jobs</h2>
-      <ul>
-        {jobs.map((job, i) => (
-          <li
-            key={i}
-            className="flex justify-between items-center border p-2 mb-2"
-          >
-            <div className="flex justify-between items-center w-full">
+    <SecondarySection>
+      <SectionHeader>
+        <SectionTitle>Saved Jobs</SectionTitle>
+        <SectionSubtitle>
+          Review and update roles in your pipeline.
+        </SectionSubtitle>
+      </SectionHeader>
+
+      {jobs.length === 0 ? (
+        <p className="text-sm text-slate-500 dark:text-slate-400">
+          No saved jobs yet.
+        </p>
+      ) : (
+        <ul className="space-y-4">
+          {jobs.map((job, i) => (
+            <li
+              key={job._id}
+              className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-slate-950"
+            >
               {editingIndex === i ? (
-                <>
-                  <div className="flex gap-2 items-center">
-                    <input
-                      value={editCompany}
-                      onChange={(e) => setEditCompany(e.target.value)}
-                    />
-                    <input
-                      value={editRole}
-                      onChange={(e) => setEditRole(e.target.value)}
-                    />
-                    <select
-                      value={editStatus}
-                      onChange={(e) =>
-                        setEditStatus(e.target.value as JobStatus)
-                      }
-                    >
-                      {JOB_STATUSES.map((s) => (
-                        <option key={s} value={s}>
-                          {s}
-                        </option>
-                      ))}
-                    </select>
-                    <select
-                      value={employmentType}
-                      onChange={(e) =>
-                        setEmploymentType(e.target.value as JobType)
-                      }
-                    >
-                      {JOB_TYPES.map((t) => (
-                        <option key={t} value={t}>
-                          {t}
-                        </option>
-                      ))}
-                    </select>
+                <div className="space-y-4">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <FormField>
+                      <FormLabel>Company</FormLabel>
+                      <FormInput
+                        value={editCompany}
+                        onChange={(e) => setEditCompany(e.target.value)}
+                      />
+                    </FormField>
+                    <FormField>
+                      <FormLabel>Title</FormLabel>
+                      <FormInput
+                        value={editRole}
+                        onChange={(e) => setEditRole(e.target.value)}
+                      />
+                    </FormField>
                   </div>
-                  <div>
-                    <button onClick={() => saveEdit(job._id, i)}>Save</button>
-                    <button onClick={cancelEdit}>Cancel</button>
+
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <FormField>
+                      <FormLabel>Status</FormLabel>
+                      <FormSelect
+                        value={editStatus}
+                        onChange={(e) =>
+                          setEditStatus(e.target.value as JobStatus)
+                        }
+                      >
+                        {JOB_STATUSES.map((s) => (
+                          <option key={s} value={s}>
+                            {s}
+                          </option>
+                        ))}
+                      </FormSelect>
+                    </FormField>
+                    <FormField>
+                      <FormLabel>Employment Type</FormLabel>
+                      <FormSelect
+                        value={employmentType}
+                        onChange={(e) =>
+                          setEmploymentType(e.target.value as JobType)
+                        }
+                      >
+                        {JOB_TYPES.map((t) => (
+                          <option key={t} value={t}>
+                            {t}
+                          </option>
+                        ))}
+                      </FormSelect>
+                    </FormField>
                   </div>
-                </>
+
+                  <div className="flex flex-wrap gap-3">
+                    <PrimaryButton onClick={() => saveEdit(job._id, i)}>
+                      Save
+                    </PrimaryButton>
+                    <SecondaryButton onClick={cancelEdit}>
+                      Cancel
+                    </SecondaryButton>
+                  </div>
+                </div>
               ) : (
-                <>
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                   <div>
-                    {job.company} - {job.title} (<span>{job.status}</span>)
-                    {new Date(job.createdAt).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
+                    <p className="text-lg font-semibold text-slate-900 dark:text-white">
+                      {job.company} — {job.title}
+                    </p>
+                    <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
+                      <span className="font-semibold text-slate-900 dark:text-white">
+                        {job.status}
+                      </span>
+                      {" • "}
+                      {job.employmentType}
+                    </p>
+                    <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+                      {new Date(job.createdAt).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </p>
                   </div>
-                  <div>
-                    <button onClick={() => deleteJob(job._id, i)}>
-                      Delete{job._id}
-                    </button>
-                    <button onClick={() => startEdit(i)}>Edit</button>
+                  <div className="flex flex-wrap gap-2">
+                    <SecondaryButton onClick={() => deleteJob(job._id, i)}>
+                      Delete
+                    </SecondaryButton>
+                    <PrimaryButton onClick={() => startEdit(i)}>
+                      Edit
+                    </PrimaryButton>
                   </div>
-                </>
+                </div>
               )}
-            </div>
-          </li>
-        ))}
-      </ul>
-    </>
+            </li>
+          ))}
+        </ul>
+      )}
+    </SecondarySection>
   );
 };
 

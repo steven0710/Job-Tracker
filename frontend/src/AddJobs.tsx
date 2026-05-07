@@ -7,10 +7,24 @@ import {
   type JobType,
 } from "./types/jobs";
 import { createJob } from "./services/jobServices";
+import {
+  SecondarySection,
+  SectionHeader,
+  SectionTitle,
+  SectionSubtitle,
+  FormField,
+  FormLabel,
+  FormInput,
+  FormSelect,
+  ButtonGrid,
+  PrimaryButton,
+} from "./components/StyledElements";
+
 type Props = {
   setJobs: React.Dispatch<React.SetStateAction<Job[]>>;
 };
-const JobForm: React.FC<Props> = ({ setJobs }) => {
+
+const JobForm = ({ setJobs }: Props) => {
   const [company, setCompany] = useState<string>("");
   const [title, setRole] = useState<string>("");
   const [status, setStatus] = useState<JobStatus>("applied");
@@ -22,7 +36,7 @@ const JobForm: React.FC<Props> = ({ setJobs }) => {
       company,
       title,
       status,
-      employmentType: employmentType,
+      employmentType,
     };
     const updated = await createJob(newJob);
     setJobs((prevJobs) => [...prevJobs, updated]);
@@ -33,34 +47,39 @@ const JobForm: React.FC<Props> = ({ setJobs }) => {
   };
 
   return (
-    <div>
-      <h2 className="py-16 font-bold">Add a Job</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-3 gap-4">
-          <div className="flex flex-row p-2">
-            <label className="">Company:</label>
-            <input
-              type="text"
-              value={company}
-              onChange={(e) => setCompany(e.target.value)}
-              required
-            />
-          </div>
+    <SecondarySection>
+      <SectionHeader>
+        <SectionTitle>Add a Job</SectionTitle>
+        <SectionSubtitle>
+          Save a role to your pipeline and update its status later.
+        </SectionSubtitle>
+      </SectionHeader>
 
-          <div>
-            <label>Title:</label>
-            <input
-              className=""
-              type="text"
-              value={title}
-              onChange={(e) => setRole(e.target.value)}
-              required
-            />
-          </div>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <FormField>
+          <FormLabel>Company</FormLabel>
+          <FormInput
+            type="text"
+            value={company}
+            onChange={(e) => setCompany(e.target.value)}
+            required
+          />
+        </FormField>
 
-          <div>
-            <label>Status:</label>
-            <select
+        <FormField>
+          <FormLabel>Title</FormLabel>
+          <FormInput
+            type="text"
+            value={title}
+            onChange={(e) => setRole(e.target.value)}
+            required
+          />
+        </FormField>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <FormField>
+            <FormLabel>Status</FormLabel>
+            <FormSelect
               value={status}
               onChange={(e) => setStatus(e.target.value as JobStatus)}
             >
@@ -69,11 +88,12 @@ const JobForm: React.FC<Props> = ({ setJobs }) => {
                   {s}
                 </option>
               ))}
-            </select>
-          </div>
-          <div>
-            <label>Employment Type:</label>
-            <select
+            </FormSelect>
+          </FormField>
+
+          <FormField>
+            <FormLabel>Employment Type</FormLabel>
+            <FormSelect
               value={employmentType}
               onChange={(e) => setEmploymentType(e.target.value as JobType)}
             >
@@ -82,13 +102,15 @@ const JobForm: React.FC<Props> = ({ setJobs }) => {
                   {s}
                 </option>
               ))}
-            </select>
-          </div>
+            </FormSelect>
+          </FormField>
         </div>
 
-        <button type="submit">Add Job</button>
+        <ButtonGrid>
+          <PrimaryButton type="submit">Add Job</PrimaryButton>
+        </ButtonGrid>
       </form>
-    </div>
+    </SecondarySection>
   );
 };
 

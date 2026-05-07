@@ -2,6 +2,7 @@ import React from "react";
 
 const responsiveSpacing = "rounded-lg md:rounded-xl px-3 md:px-4 py-2 md:py-3";
 const interactiveStyles = `${responsiveSpacing} text-sm font-semibold transition`;
+const formControlStyles = `w-full ${responsiveSpacing} border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-950/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-cyan-400 dark:focus:ring-cyan-500/20`;
 
 /**
  * Container centers page content and keeps the layout responsive.
@@ -92,20 +93,20 @@ export const FormLabel = ({ children }: { children: React.ReactNode }) => (
  */
 export const FormInput = (
   props: React.InputHTMLAttributes<HTMLInputElement>,
-) => (
-  <input
-    {...props}
-    className={`w-full ${responsiveSpacing} border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-950/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-cyan-400 dark:focus:ring-cyan-500/20`}
-  />
-);
+) => <input {...props} className={formControlStyles} />;
+
+/**
+ * FormSelect styles select fields the same as text inputs.
+ */
+export const FormSelect = (
+  props: React.SelectHTMLAttributes<HTMLSelectElement>,
+) => <select {...props} className={formControlStyles} />;
 
 /**
  * FormHelpText renders small descriptive text under a form field.
  */
 export const FormHelpText = ({ children }: { children: React.ReactNode }) => (
-  <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
-    {children}
-  </p>
+  <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">{children}</p>
 );
 
 /**
