@@ -12,6 +12,7 @@ import {
   FormField,
   FormLabel,
   FormInput,
+  FormHelpText,
   ButtonGrid,
   PrimaryButton,
   SecondaryButton,
@@ -82,6 +83,9 @@ const Login = () => {
                   autoComplete="email"
                   required
                 />
+                <FormHelpText>
+                  Use a valid email address (e.g., you@example.com).
+                </FormHelpText>
               </FormField>
 
               <FormField>
@@ -96,9 +100,9 @@ const Login = () => {
                   minLength={6}
                   required
                 />
-                <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
-                  Minimum 6 characters.
-                </p>
+                <FormHelpText>
+                  Use at least 6 characters for your password.
+                </FormHelpText>
               </FormField>
 
               {errorMessage ? (
