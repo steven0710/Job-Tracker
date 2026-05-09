@@ -6,7 +6,7 @@ import {
   type JobStatus,
   type JobType,
 } from "./types/jobs";
-import { createJob } from "./services/jobServices";
+import { createJob, getJobsByApi } from "./services/jobServices";
 import {
   SecondarySection,
   SectionHeader,
@@ -38,8 +38,9 @@ const JobForm = ({ setJobs }: Props) => {
       status,
       employmentType,
     };
-    const updated = await createJob(newJob);
-    setJobs((prevJobs) => [...prevJobs, updated]);
+    await createJob(newJob);
+    const data = await getJobsByApi();
+    setJobs(data.jobs);
     setCompany("");
     setRole("");
     setStatus("applied");

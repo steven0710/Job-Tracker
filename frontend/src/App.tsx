@@ -20,7 +20,7 @@ const JobForm = () => {
       try {
         const data = await getJobsByApi();
         console.log(data);
-        setJobs(data.jobs.slice().reverse());
+        setJobs(data.jobs);
       } catch (err) {
         console.error("Failed to load jobs:", err);
       }
