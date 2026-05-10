@@ -7,6 +7,8 @@ import {
 import { Outlet } from "@tanstack/react-router";
 import App from "./App";
 import Login from "./Login";
+import EmailVerifiedPage from "./EmailVerifiedPage";
+import VerifyEmailWaitingPage from "./VerifyEmailWaitingPage";
 
 const rootRoute = createRootRoute({
   component: () => <Outlet />,
@@ -25,7 +27,30 @@ const loginRoute = createRoute({
   component: () => <Login />,
 });
 
-const routeTree = rootRoute.addChildren([indexRoute, loginRoute]);
+const emailVerifiedRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "verify-email",
+  validateSearch: (search: Record<string, unknown>) => ({
+    token: typeof search.token === "string" ? search.token : "",
+  }),
+  component: () => <EmailVerifiedPage />,
+});
+
+const emailPendingVerificationRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "verify-email-pending",
+  validateSearch: (search: Record<string, unknown>) => ({
+    email: typeof search.email === "string" ? search.email : "",
+  }),
+  component: () => <VerifyEmailWaitingPage />,
+});
+
+const routeTree = rootRoute.addChildren([
+  indexRoute,
+  loginRoute,
+  emailVerifiedRoute,
+  emailPendingVerificationRoute,
+]);
 export const router = createRouter({
   routeTree,
   basepath: "/",

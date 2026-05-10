@@ -43,6 +43,17 @@ export async function handleLogin(
 
   return data;
 }
+
+export async function verifyEmail(token: string): Promise<void> {
+  const res = await fetch(
+    `${BACKEND_API}/users/verify-email?token=${encodeURIComponent(token)}`,
+  );
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.message ?? `Email verification failed: ${res.status}`);
+  }
+}
+
 export async function handleRegister(
   payload: LoginPayload,
 ): Promise<LoginResponse> {

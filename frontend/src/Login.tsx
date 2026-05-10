@@ -43,11 +43,11 @@ const Login = () => {
 
       if (intent === "register") {
         await handleRegister({ email, password });
+        navigate({ to: "/verify-email-pending", search: { email }, replace: true });
       } else {
         await handleLogin({ email, password });
+        navigate({ to: "/", replace: true });
       }
-
-      navigate({ to: "/", replace: true });
     } catch (err) {
       setErrorMessage(
         err instanceof Error ? err.message : "Authentication failed.",
