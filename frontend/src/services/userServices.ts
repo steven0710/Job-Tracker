@@ -54,6 +54,20 @@ export async function verifyEmail(token: string): Promise<void> {
   }
 }
 
+export async function resendVerificationEmail(email: string): Promise<void> {
+  const res = await fetch(`${BACKEND_API}/users/resend-verification-email`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(
+      data.message ?? `Failed to resend verification email: ${res.status}`,
+    );
+  }
+}
+
 export async function handleRegister(
   payload: LoginPayload,
 ): Promise<LoginResponse> {

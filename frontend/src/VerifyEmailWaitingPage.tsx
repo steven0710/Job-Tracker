@@ -8,12 +8,13 @@ import {
   SectionTitle,
   SectionSubtitle,
   PrimaryButton,
-  SecondaryButton,
 } from "./components/StyledElements";
+import { resendVerificationEmail } from "./services/userServices";
+import { useState } from "react";
 
 const routeApi = getRouteApi("/verify-email-pending");
-
 const VerifyEmailWaitingPage = () => {
+  const [resending, setResending] = useState(false);
   const { email } = routeApi.useSearch();
   const navigate = useNavigate();
 
@@ -23,7 +24,18 @@ const VerifyEmailWaitingPage = () => {
   }
 
   const handleResend = async () => {
-    console.log("WIPE: Resend verification email for:", email);
+    setResending(true);
+    try {
+      await resendVerificationEmail(email);
+    } catch (err) {
+      alert(
+        err instanceof Error
+          ? err.message
+          : "Failed to resend verification email.",
+      );
+    } finally {
+      setResending(false);
+    }
   };
 
   return (
@@ -43,14 +55,9 @@ const VerifyEmailWaitingPage = () => {
               </SectionSubtitle>
             </SectionHeader>
 
-            <div className="grid gap-2 pt-2 sm:grid-cols-2">
-              <PrimaryButton onClick={handleResend}>Resend</PrimaryButton>
-              <SecondaryButton
-                onClick={() => navigate({ to: "/login", replace: true })}
-              >
-                Go to Login
-              </SecondaryButton>
-            </div>
+            <PrimaryButton onClick={handleResend} disabled={resending}>
+              {resending ? "Sending..." : "Resend"}
+            </PrimaryButton>
           </SecondarySection>
         </div>
       </Container>
