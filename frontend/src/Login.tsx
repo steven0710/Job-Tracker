@@ -46,7 +46,7 @@ const Login = () => {
         navigate({ to: "/verify-email-pending", search: { email }, replace: true });
       } else {
         await handleLogin({ email, password });
-        navigate({ to: "/", replace: true });
+        navigate({ to: "/dashboard", replace: true });
       }
     } catch (err) {
       setErrorMessage(

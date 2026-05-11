@@ -21,6 +21,14 @@ const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/",
   beforeLoad: () => {
+    throw redirect({ to: "/dashboard", replace: true });
+  },
+});
+
+const dashboardRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/dashboard",
+  beforeLoad: () => {
     if (!localStorage.getItem(TOKEN_KEY)) {
       throw redirect({ to: "/login", replace: true });
     }
@@ -54,6 +62,7 @@ const emailPendingVerificationRoute = createRoute({
 
 const routeTree = rootRoute.addChildren([
   indexRoute,
+  dashboardRoute,
   loginRoute,
   emailVerifiedRoute,
   emailPendingVerificationRoute,
