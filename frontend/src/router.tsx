@@ -3,7 +3,9 @@ import {
   createRootRoute,
   createRoute,
   createRouter,
+  redirect,
 } from "@tanstack/react-router";
+import { TOKEN_KEY } from "./constants";
 import { Outlet } from "@tanstack/react-router";
 import App from "./App";
 import Login from "./Login";
@@ -18,6 +20,11 @@ const rootRoute = createRootRoute({
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/",
+  beforeLoad: () => {
+    if (!localStorage.getItem(TOKEN_KEY)) {
+      throw redirect({ to: "/login", replace: true });
+    }
+  },
   component: () => <App />,
 });
 
