@@ -110,7 +110,6 @@ export async function handleRegister(
   if (!res.ok) {
     throw new Error(`Register failed: ${res.status}`);
   }
-  const x = 6;
 
   return data;
 }
