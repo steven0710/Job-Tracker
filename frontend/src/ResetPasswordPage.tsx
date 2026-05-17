@@ -11,7 +11,7 @@ import {
   SectionSubtitle,
   FormField,
   FormLabel,
-  FormInput,
+  PasswordInput,
   PrimaryButton,
   ErrorMessage,
 } from "./components/StyledElements";
@@ -64,8 +64,7 @@ const ResetPasswordPage = () => {
             <form onSubmit={handleSubmit} className="space-y-4">
               <FormField>
                 <FormLabel>New password</FormLabel>
-                <FormInput
-                  type="password"
+                <PasswordInput
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter new password"
@@ -78,8 +77,7 @@ const ResetPasswordPage = () => {
 
               <FormField>
                 <FormLabel>Confirm password</FormLabel>
-                <FormInput
-                  type="password"
+                <PasswordInput
                   value={confirm}
                   onChange={(e) => setConfirm(e.target.value)}
                   placeholder="Confirm new password"

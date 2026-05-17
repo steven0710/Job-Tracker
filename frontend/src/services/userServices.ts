@@ -29,14 +29,10 @@ export async function handleLogin(
     body: JSON.stringify(payload),
   });
   const data = await res.json();
-  console.log("LOGIN response status:", res.status);
-  console.log("LOGIN response token:", data.token);
+
   if (data?.token) localStorage.setItem(TOKEN_KEY, data.token);
   //localStorage.getItem(TOKEN_KEY) should return the token we just set, but we can log it to confirm
-  console.log(
-    "Token in localStorage after login:",
-    localStorage.getItem(TOKEN_KEY),
-  );
+
   if (!res.ok) {
     throw new Error(`Login failed: ${res.status}`);
   }
@@ -84,8 +80,6 @@ export async function resetPassword(
   token: string,
   password: string,
 ): Promise<void> {
-  console.log("Resetting password with token:", token);
-  console.log("New password:", password);
   const res = await fetch(
     `${BACKEND_API}/users/reset-password?token=${encodeURIComponent(token)}`,
     {
@@ -110,15 +104,9 @@ export async function handleRegister(
     body: JSON.stringify(payload),
   });
   const data = await res.json();
-  console.log("REGISTER response status:", res.status);
-  console.log("REGISTER response token:", data.token);
-  console.log("REGISTER response message:", data.message, data.issues);
+
   if (data?.token) localStorage.setItem(TOKEN_KEY, data.token);
-  //localStorage.getItem(TOKEN_KEY) should return the token we just set, but we can log it to confirm
-  console.log(
-    "Token in localStorage after register:",
-    localStorage.getItem(TOKEN_KEY),
-  );
+
   if (!res.ok) {
     throw new Error(`Register failed: ${res.status}`);
   }

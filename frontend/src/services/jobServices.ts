@@ -23,8 +23,7 @@ export async function getJobsByApi(): Promise<{ jobs: Job[] }> {
     },
   });
   const data = await res.json();
-  console.log("getJobsByApi response status:", res.status);
-  console.log("getJobsByApi response json:", data);
+
   return data;
 }
 
@@ -32,7 +31,7 @@ export async function createJob(
   job: Omit<Job, "createdAt" | "_id">,
 ): Promise<Job> {
   const token = localStorage.getItem("token");
-  console.log("Token in localStorage before createJob:", token);
+
   const res = await fetch(`${BACKEND_API}/jobs/create`, {
     method: "POST",
     headers: {
@@ -43,8 +42,6 @@ export async function createJob(
   });
 
   const data = await res.json();
-  console.log("createJob response status:", res.status);
-  console.log("createJob response json:", data);
 
   if (!res.ok) {
     throw new Error(data?.message || `Create job failed: ${res.status}`);

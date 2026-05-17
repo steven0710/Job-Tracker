@@ -12,6 +12,7 @@ import {
   FormField,
   FormLabel,
   FormInput,
+  PasswordInput,
   FormHelpText,
   ButtonGrid,
   PrimaryButton,
@@ -43,7 +44,11 @@ const Login = () => {
 
       if (intent === "register") {
         await handleRegister({ email, password });
-        navigate({ to: "/verify-email-pending", search: { email }, replace: true });
+        navigate({
+          to: "/verify-email-pending",
+          search: { email },
+          replace: true,
+        });
       } else {
         await handleLogin({ email, password });
         navigate({ to: "/dashboard", replace: true });
@@ -90,9 +95,8 @@ const Login = () => {
 
               <FormField>
                 <FormLabel>Password</FormLabel>
-                <FormInput
+                <PasswordInput
                   id="password"
-                  type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"

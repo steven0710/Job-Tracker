@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 const responsiveSpacing = "rounded-lg md:rounded-xl px-3 md:px-4 py-2 md:py-3";
 const interactiveStyles = `${responsiveSpacing} text-sm font-semibold transition`;
@@ -148,3 +149,29 @@ export const ErrorMessage = ({ children }: { children: React.ReactNode }) => (
     {children}
   </p>
 );
+
+/**
+ * PasswordInput is a password field with a show/hide toggle button.
+ */
+export const PasswordInput = (
+  props: Omit<React.InputHTMLAttributes<HTMLInputElement>, "type">,
+) => {
+  const [visible, setVisible] = useState(false);
+  return (
+    <div className="relative">
+      <input
+        {...props}
+        type={visible ? "text" : "password"}
+        className={`${formControlStyles} pr-10`}
+      />
+      <button
+        type="button"
+        onClick={() => setVisible((v) => !v)}
+        className="absolute inset-y-0 right-0 flex items-center px-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+        tabIndex={-1}
+      >
+        {visible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+      </button>
+    </div>
+  );
+};
