@@ -11,6 +11,8 @@ import App from "./App";
 import Login from "./Login";
 import EmailVerifiedPage from "./EmailVerifiedPage";
 import VerifyEmailWaitingPage from "./VerifyEmailWaitingPage";
+import ForgotPasswordPage from "./ForgotPasswordPage";
+import ResetPasswordPage from "./ResetPasswordPage";
 
 const rootRoute = createRootRoute({
   component: () => <Outlet />,
@@ -71,12 +73,29 @@ const emailPendingVerificationRoute = createRoute({
   component: () => <VerifyEmailWaitingPage />,
 });
 
+const forgotPasswordRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "forgot-password",
+  component: () => <ForgotPasswordPage />,
+});
+
+const resetPasswordRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "reset-password",
+  validateSearch: (search: Record<string, unknown>) => ({
+    token: typeof search.token === "string" ? search.token : "",
+  }),
+  component: () => <ResetPasswordPage />,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   dashboardRoute,
   loginRoute,
   emailVerifiedRoute,
   emailPendingVerificationRoute,
+  forgotPasswordRoute,
+  resetPasswordRoute,
 ]);
 export const router = createRouter({
   routeTree,

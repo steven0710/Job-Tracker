@@ -103,6 +103,15 @@ const Login = () => {
                 <FormHelpText>
                   Use at least 6 characters for your password.
                 </FormHelpText>
+                <div className="mt-2 text-right">
+                  <button
+                    type="button"
+                    onClick={() => navigate({ to: "/forgot-password" })}
+                    className="text-xs text-blue-600 hover:underline dark:text-cyan-400"
+                  >
+                    Forgot password?
+                  </button>
+                </div>
               </FormField>
 
               {errorMessage ? (

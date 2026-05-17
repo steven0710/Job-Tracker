@@ -68,6 +68,38 @@ export async function resendVerificationEmail(email: string): Promise<void> {
   }
 }
 
+export async function requestPasswordReset(email: string): Promise<void> {
+  const res = await fetch(`${BACKEND_API}/users/forgot-password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.message ?? `Request failed: ${res.status}`);
+  }
+}
+
+export async function resetPassword(
+  token: string,
+  password: string,
+): Promise<void> {
+  console.log("Resetting password with token:", token);
+  console.log("New password:", password);
+  const res = await fetch(
+    `${BACKEND_API}/users/reset-password?token=${encodeURIComponent(token)}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password }),
+    },
+  );
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.message ?? `Reset failed: ${res.status}`);
+  }
+}
+
 export async function handleRegister(
   payload: LoginPayload,
 ): Promise<LoginResponse> {
