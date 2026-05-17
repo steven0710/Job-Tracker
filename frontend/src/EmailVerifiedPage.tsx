@@ -41,7 +41,7 @@ const EmailVerifiedPage = () => {
         setError(err instanceof Error ? err.message : "Verification failed.");
         setStatus("error");
       });
-  }, []);
+  }, [navigate, token]);
 
   return (
     <PageBackground>
