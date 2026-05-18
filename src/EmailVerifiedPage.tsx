@@ -19,7 +19,7 @@ const EmailVerifiedPage = () => {
   const { token } = routeApi.useSearch();
   const navigate = useNavigate();
   const [status, setStatus] = useState<"verifying" | "verified" | "error">(
-    "verifying",
+    "verifying"
   );
   const [error, setError] = useState("");
   const hasRun = useRef(false);

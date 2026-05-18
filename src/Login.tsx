@@ -26,7 +26,7 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeIntent, setActiveIntent] = useState<"login" | "register" | null>(
-    null,
+    null
   );
   const navigate = useNavigate();
 
@@ -55,7 +55,7 @@ const Login = () => {
       }
     } catch (err) {
       setErrorMessage(
-        err instanceof Error ? err.message : "Authentication failed.",
+        err instanceof Error ? err.message : "Authentication failed."
       );
     } finally {
       setIsSubmitting(false);

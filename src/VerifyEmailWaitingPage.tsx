@@ -31,7 +31,7 @@ const VerifyEmailWaitingPage = () => {
       alert(
         err instanceof Error
           ? err.message
-          : "Failed to resend verification email.",
+          : "Failed to resend verification email."
       );
     } finally {
       setResending(false);

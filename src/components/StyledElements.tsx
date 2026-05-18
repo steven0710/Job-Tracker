@@ -93,14 +93,14 @@ export const FormLabel = ({ children }: { children: React.ReactNode }) => (
  * FormInput styles text inputs and supports dark mode styling.
  */
 export const FormInput = (
-  props: React.InputHTMLAttributes<HTMLInputElement>,
+  props: React.InputHTMLAttributes<HTMLInputElement>
 ) => <input {...props} className={formControlStyles} />;
 
 /**
  * FormSelect styles select fields the same as text inputs.
  */
 export const FormSelect = (
-  props: React.SelectHTMLAttributes<HTMLSelectElement>,
+  props: React.SelectHTMLAttributes<HTMLSelectElement>
 ) => <select {...props} className={formControlStyles} />;
 
 /**
@@ -121,7 +121,7 @@ export const ButtonGrid = ({ children }: { children: React.ReactNode }) => (
  * PrimaryButton renders the main form action button.
  */
 export const PrimaryButton = (
-  props: React.ButtonHTMLAttributes<HTMLButtonElement>,
+  props: React.ButtonHTMLAttributes<HTMLButtonElement>
 ) => (
   <button
     {...props}
@@ -133,7 +133,7 @@ export const PrimaryButton = (
  * SecondaryButton renders the alternate action button style.
  */
 export const SecondaryButton = (
-  props: React.ButtonHTMLAttributes<HTMLButtonElement>,
+  props: React.ButtonHTMLAttributes<HTMLButtonElement>
 ) => (
   <button
     {...props}
@@ -154,7 +154,7 @@ export const ErrorMessage = ({ children }: { children: React.ReactNode }) => (
  * PasswordInput is a password field with a show/hide toggle button.
  */
 export const PasswordInput = (
-  props: Omit<React.InputHTMLAttributes<HTMLInputElement>, "type">,
+  props: Omit<React.InputHTMLAttributes<HTMLInputElement>, "type">
 ) => {
   const [visible, setVisible] = useState(false);
   return (

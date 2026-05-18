@@ -57,8 +57,8 @@ const SavedJobs: React.FC<Props> = ({ jobs, setJobs }) => {
                 ...job,
                 ...payload,
               }
-            : job,
-        ),
+            : job
+        )
       );
     } catch (err) {
       console.error("Failed to update job:", err);

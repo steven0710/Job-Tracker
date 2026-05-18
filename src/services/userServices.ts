@@ -20,7 +20,7 @@ export type LoginResponse = {
 };
 
 export async function handleLogin(
-  payload: LoginPayload,
+  payload: LoginPayload
 ): Promise<LoginResponse> {
   const res = await fetch(`${BACKEND_API}/users/login`, {
     method: "POST",
@@ -42,7 +42,7 @@ export async function handleLogin(
 
 export async function verifyEmail(token: string): Promise<void> {
   const res = await fetch(
-    `${BACKEND_API}/users/verify-email?token=${encodeURIComponent(token)}`,
+    `${BACKEND_API}/users/verify-email?token=${encodeURIComponent(token)}`
   );
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
@@ -59,7 +59,7 @@ export async function resendVerificationEmail(email: string): Promise<void> {
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
     throw new Error(
-      data.message ?? `Failed to resend verification email: ${res.status}`,
+      data.message ?? `Failed to resend verification email: ${res.status}`
     );
   }
 }
@@ -78,7 +78,7 @@ export async function requestPasswordReset(email: string): Promise<void> {
 
 export async function resetPassword(
   token: string,
-  password: string,
+  password: string
 ): Promise<void> {
   const res = await fetch(
     `${BACKEND_API}/users/reset-password?token=${encodeURIComponent(token)}`,
@@ -86,7 +86,7 @@ export async function resetPassword(
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ password }),
-    },
+    }
   );
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
@@ -95,7 +95,7 @@ export async function resetPassword(
 }
 
 export async function handleRegister(
-  payload: LoginPayload,
+  payload: LoginPayload
 ): Promise<LoginResponse> {
   const res = await fetch(`${BACKEND_API}/users/register`, {
     method: "POST",

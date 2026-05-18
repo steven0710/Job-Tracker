@@ -28,7 +28,7 @@ export async function getJobsByApi(): Promise<{ jobs: Job[] }> {
 }
 
 export async function createJob(
-  job: Omit<Job, "createdAt" | "_id">,
+  job: Omit<Job, "createdAt" | "_id">
 ): Promise<Job> {
   const token = localStorage.getItem("token");
 
@@ -67,7 +67,7 @@ export async function deleteJobReal(id: string): Promise<void> {
 
 export async function updateJob(
   id: string,
-  updatedFields: Partial<Omit<Job, "createdAt" | "_id">>,
+  updatedFields: Partial<Omit<Job, "createdAt" | "_id">>
 ): Promise<Job> {
   const token = localStorage.getItem("token");
   const res = await fetch(`${BACKEND_API}/jobs/${id}`, {
